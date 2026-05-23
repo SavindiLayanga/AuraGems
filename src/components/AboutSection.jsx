@@ -94,7 +94,7 @@ export default function AboutSection() {
           </div>
 
           {/* Honeycomb mosaic */}
-          <div className="scroll-reveal-item about-section__gallery order-2 flex justify-center lg:order-1 lg:justify-start">
+          <div className="about-section__gallery order-2 flex justify-center lg:order-1 lg:justify-start">
             <div className="hex-gallery-wrap">
               <LuxuryHexagonGallery />
             </div>

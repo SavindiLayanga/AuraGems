@@ -12,9 +12,9 @@ import Button from './Button';
 
 const shopLinks = [
   { label: 'All Collections', href: '#collection' },
-  { label: 'Rings', href: '#collection' },
-  { label: 'Necklaces', href: '#collection' },
-  { label: 'Bracelets', href: '#collection' },
+  { label: 'Rings', href: '/rings' },
+  { label: 'Earrings', href: '/earrings' },
+  { label: 'Necklaces', href: '/necklaces' },
   { label: 'Loose Stones', href: '#collection' },
 ];
 

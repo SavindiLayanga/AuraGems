@@ -65,7 +65,7 @@ export default function Navbar() {
     }`;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-beige/50 bg-cream/95 shadow-sm backdrop-blur-md">
+    <header className="site-header fixed inset-x-0 top-0 z-[100] border-b border-beige/50 bg-cream/95 shadow-sm backdrop-blur-md supports-[backdrop-filter]:bg-cream/90">
       <nav
         className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4 md:px-10 lg:px-16"
         aria-label="Main"

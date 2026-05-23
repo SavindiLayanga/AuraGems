@@ -11,9 +11,9 @@ export default function GemCollectionPage() {
   const revealRef = useScrollReveal({ instant: true });
 
   return (
-    <div className="page-stage min-h-screen overflow-x-hidden bg-cream">
+    <>
       <Navbar />
-
+      <div className="page-stage min-h-screen overflow-x-hidden bg-cream">
       <main ref={revealRef} className="gem-catalog-page">
         <div className="section-x mx-auto max-w-7xl pb-16 pt-24 sm:pb-20 sm:pt-28 md:pt-32">
           <Link
@@ -52,6 +52,7 @@ export default function GemCollectionPage() {
       </main>
 
       <Footer />
-    </div>
+      </div>
+    </>
   );
 }

@@ -3,8 +3,17 @@ import { X } from 'lucide-react';
 export default function GemDetailPopover({ gem, side = 'left', onClose }) {
   if (!gem) return null;
 
-  const { name, price, tagline, image, imageAlt, callouts, benefits, uses } =
-    gem;
+  const {
+    name,
+    price,
+    tagline,
+    image,
+    imageAlt,
+    imagePosition,
+    callouts,
+    benefits,
+    uses,
+  } = gem;
 
   return (
     <div
@@ -37,6 +46,9 @@ export default function GemDetailPopover({ gem, side = 'left', onClose }) {
           src={image}
           alt={imageAlt}
           className="gem-detail-popover__image warm-photo"
+          style={
+            imagePosition ? { objectPosition: imagePosition } : undefined
+          }
         />
         <h2 id="gem-detail-title" className="gem-detail-popover__title font-serif">
           {name}

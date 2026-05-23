@@ -10,8 +10,9 @@ import Footer from '../components/Footer';
 
 export default function HomePage() {
   return (
-    <div className="page-stage min-h-screen overflow-x-hidden bg-cream">
+    <>
       <Navbar />
+      <div className="page-stage min-h-screen overflow-x-hidden bg-cream">
       <div className="relative">
         <Hero />
         <Features />
@@ -22,6 +23,7 @@ export default function HomePage() {
       <FAQ />
       <ContactSection />
       <Footer />
-    </div>
+      </div>
+    </>
   );
 }

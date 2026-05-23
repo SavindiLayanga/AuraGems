@@ -3,7 +3,7 @@ export default function GemEducationCard({
   isActive = false,
   onOpen,
 }) {
-  const { name, price, image, imageAlt } = gem;
+  const { name, price, image, imageAlt, imagePosition } = gem;
 
   return (
     <article
@@ -24,7 +24,10 @@ export default function GemEducationCard({
         <img
           src={image}
           alt={imageAlt}
-          className="gem-edu-card__image warm-photo"
+          className={`gem-edu-card__image warm-photo${imagePosition ? ' gem-edu-card__image--jewelry-focus' : ''}`}
+          style={
+            imagePosition ? { objectPosition: imagePosition } : undefined
+          }
           loading="lazy"
         />
       </div>

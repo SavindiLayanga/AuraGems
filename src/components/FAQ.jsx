@@ -1,5 +1,5 @@
 import { ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
 const faqs = [
@@ -35,9 +35,38 @@ const faqs = [
   },
 ];
 
+function buildRows(items, columnCount) {
+  const rows = [];
+  for (let i = 0; i < items.length; i += columnCount) {
+    const slice = items.slice(i, i + columnCount);
+    rows.push(
+      slice.map((item, offset) => ({
+        ...item,
+        index: i + offset,
+      })),
+    );
+  }
+  return rows;
+}
+
 export default function FAQ() {
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openIndex, setOpenIndex] = useState(-1);
+  const [columns, setColumns] = useState(2);
   const revealRef = useScrollReveal();
+
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 640px)');
+
+    const updateColumns = () => {
+      setColumns(media.matches ? 2 : 1);
+    };
+
+    updateColumns();
+    media.addEventListener('change', updateColumns);
+    return () => media.removeEventListener('change', updateColumns);
+  }, []);
+
+  const rows = buildRows(faqs, columns);
 
   return (
     <section
@@ -59,55 +88,73 @@ export default function FAQ() {
           </p>
         </div>
 
-        <ul className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2 md:mt-12 lg:gap-4">
-          {faqs.map(({ question, answer }, index) => {
-            const isOpen = openIndex === index;
-            const panelId = `faq-panel-${index}`;
-            const buttonId = `faq-button-${index}`;
+        <ul className="faq-list mt-10 flex flex-col gap-3 md:mt-12 lg:gap-4">
+          {rows.map((row, rowIndex) => {
+            const openInRow = row.find((item) => item.index === openIndex);
+            const panelId = openInRow ? `faq-panel-${openInRow.index}` : undefined;
+            const buttonId = openInRow ? `faq-button-${openInRow.index}` : undefined;
 
             return (
-              <li
-                key={question}
-                className={`scroll-reveal-item group card-shadow overflow-hidden rounded-2xl border transition duration-300 hover:-translate-y-1 hover:border-tan/80 hover:card-shadow-hover ${
-                  isOpen
-                    ? 'border-tan/80 bg-white'
-                    : 'border-beige/70 bg-white/80 hover:bg-white'
-                }`}
-              >
-                <button
-                  type="button"
-                  id={buttonId}
-                  className="flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left transition-colors duration-200 hover:bg-champagne/30 md:px-6 md:py-5"
-                  aria-expanded={isOpen}
-                  aria-controls={panelId}
-                  onClick={() =>
-                    setOpenIndex((current) =>
-                      current === index ? -1 : index,
-                    )
-                  }
-                >
-                  <span className="text-sm font-medium tracking-wide text-mocha transition-colors duration-200 group-hover:text-mocha/90 md:text-base">
-                    {question}
-                  </span>
-                  <ChevronDown
-                    className={`h-5 w-5 shrink-0 stroke-mocha transition-transform duration-300 group-hover:stroke-warm-gray ${
-                      isOpen ? 'rotate-180' : ''
-                    }`}
-                    strokeWidth={1.5}
-                    aria-hidden
-                  />
-                </button>
+              <li key={`faq-row-${rowIndex}`} className="faq-row list-none">
                 <div
-                  id={panelId}
-                  role="region"
-                  aria-labelledby={buttonId}
-                  hidden={!isOpen}
-                  className="border-t border-beige/60 px-5 pb-5 pt-0 md:px-6 md:pb-6"
+                  className={`grid gap-3 ${
+                    columns === 2 ? 'sm:grid-cols-2' : 'grid-cols-1'
+                  }`}
                 >
-                  <p className="pt-4 text-sm font-light leading-relaxed text-warm-gray">
-                    {answer}
-                  </p>
+                  {row.map(({ question, index }) => {
+                    const isOpen = openIndex === index;
+
+                    return (
+                      <div
+                        key={question}
+                        className={`faq-item scroll-reveal-item group card-shadow overflow-hidden rounded-2xl border transition-all duration-300 ${
+                          isOpen
+                            ? 'faq-item--open'
+                            : 'faq-item--closed hover:-translate-y-0.5 hover:card-shadow-hover'
+                        }`}
+                      >
+                        <button
+                          type="button"
+                          id={`faq-button-${index}`}
+                          className="faq-item__trigger flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left transition-colors duration-300 md:px-6 md:py-5"
+                          aria-expanded={isOpen}
+                          aria-controls={`faq-panel-${index}`}
+                          onClick={() =>
+                            setOpenIndex((current) =>
+                              current === index ? -1 : index,
+                            )
+                          }
+                        >
+                          <span className="faq-item__question text-sm tracking-wide transition-colors duration-300 md:text-base">
+                            {question}
+                          </span>
+                          <ChevronDown
+                            className={`faq-item__chevron h-5 w-5 shrink-0 transition-all duration-300 ${
+                              isOpen ? 'rotate-180' : ''
+                            }`}
+                            strokeWidth={isOpen ? 2 : 1.5}
+                            aria-hidden
+                          />
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
+
+                {openInRow && (
+                  <div
+                    id={panelId}
+                    role="region"
+                    aria-labelledby={buttonId}
+                    className="faq-answer scroll-reveal-item mt-3"
+                  >
+                    <div className="card-shadow rounded-2xl border border-tan/80 bg-white px-5 py-5 md:px-6 md:py-6">
+                      <p className="text-sm font-light leading-relaxed text-warm-gray">
+                        {openInRow.answer}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </li>
             );
           })}

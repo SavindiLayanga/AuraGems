@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 const HEX_CLIP =
   'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)';
@@ -15,11 +15,18 @@ const rows = ROW_COUNTS.map((count, rowIndex) => ({
   rowIndex,
 }));
 
-function Hexagon({ empty = false }) {
+function Hexagon({ empty = false, assembleIndex = 0 }) {
   return (
     <div
-      className={`hex-gem${empty ? ' hex-gem--empty' : ''}`}
-      style={empty ? undefined : { clipPath: HEX_CLIP }}
+      className={`hex-gem${empty ? ' hex-gem--empty' : ' hex-gem--filled'}`}
+      style={
+        empty
+          ? undefined
+          : {
+              clipPath: HEX_CLIP,
+              '--hex-delay': `${assembleIndex * 0.048}s`,
+            }
+      }
     >
       {!empty && <div className="hex-gem__slice" aria-hidden="true" />}
     </div>
@@ -29,6 +36,32 @@ function Hexagon({ empty = false }) {
 export default function LuxuryHexagonGallery() {
   const galleryRef = useRef(null);
   const [ready, setReady] = useState(false);
+  const [assembled, setAssembled] = useState(false);
+
+  const setHexOrigins = useCallback(() => {
+    const gallery = galleryRef.current;
+    if (!gallery) return;
+
+    const bounds = gallery.getBoundingClientRect();
+    const centerX = bounds.left + bounds.width / 2;
+    const centerY = bounds.top + bounds.height / 2;
+
+    gallery.querySelectorAll('.hex-gem--filled').forEach((hex) => {
+      const rect = hex.getBoundingClientRect();
+      const hexX = rect.left + rect.width / 2;
+      const hexY = rect.top + rect.height / 2;
+      let dx = hexX - centerX;
+      let dy = hexY - centerY;
+      const distance = Math.hypot(dx, dy) || 1;
+      const push = 1.65;
+
+      dx = (dx / distance) * 78 * push;
+      dy = (dy / distance) * 70 * push + 14;
+
+      hex.style.setProperty('--hex-from-x', `${dx}px`);
+      hex.style.setProperty('--hex-from-y', `${dy}px`);
+    });
+  }, []);
 
   const syncMosaic = useCallback(() => {
     const gallery = galleryRef.current;
@@ -46,8 +79,9 @@ export default function LuxuryHexagonGallery() {
       hex.style.setProperty('--mosaic-y', `${-hex.offsetTop}px`);
     });
 
+    setHexOrigins();
     setReady(true);
-  }, []);
+  }, [setHexOrigins]);
 
   useLayoutEffect(() => {
     const gallery = galleryRef.current;
@@ -73,10 +107,49 @@ export default function LuxuryHexagonGallery() {
     };
   }, [syncMosaic]);
 
+  useEffect(() => {
+    const gallery = galleryRef.current;
+    if (!gallery) return;
+
+    const prefersReduced = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+
+    if (prefersReduced) {
+      setAssembled(true);
+      return;
+    }
+
+    const reveal = () => {
+      setHexOrigins();
+      requestAnimationFrame(() => {
+        setAssembled(true);
+        window.setTimeout(() => syncMosaic(), 900);
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          reveal();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.18, rootMargin: '0px 0px -6% 0px' },
+    );
+
+    observer.observe(gallery);
+    return () => observer.disconnect();
+  }, [setHexOrigins, syncMosaic]);
+
+  let filledIndex = 0;
+
   return (
     <div
       ref={galleryRef}
-      className={`hex-gallery w-fit py-2${ready ? ' hex-gallery--ready' : ''}`}
+      className={`hex-gallery w-fit py-2${ready ? ' hex-gallery--ready' : ''}${
+        assembled ? ' hex-gallery--assembled' : ''
+      }`}
       role="img"
       aria-label={MOSAIC_ALT}
       style={{ '--hex-mosaic-image': `url(${MOSAIC_IMAGE})` }}
@@ -88,9 +161,14 @@ export default function LuxuryHexagonGallery() {
           key={rowIndex}
           className={`hex-row ${rowIndex % 2 === 0 ? 'hex-row--odd' : 'hex-row--even'}`}
         >
-          {Array.from({ length: count }, (_, i) => (
-            <Hexagon key={i} empty={HIDDEN_HEX[rowIndex]?.includes(i)} />
-          ))}
+          {Array.from({ length: count }, (_, i) => {
+            const empty = HIDDEN_HEX[rowIndex]?.includes(i);
+            const assembleIndex = empty ? 0 : filledIndex++;
+
+            return (
+              <Hexagon key={i} empty={empty} assembleIndex={assembleIndex} />
+            );
+          })}
         </div>
       ))}
     </div>

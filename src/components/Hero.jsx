@@ -13,14 +13,15 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="hero-enter relative min-h-[min(92vh,900px)] overflow-x-hidden rounded-b-[1.5rem] sm:min-h-[92vh] sm:rounded-b-[2rem] md:rounded-b-[2.5rem]"
+      className="hero-section hero-enter relative min-h-[min(92vh,900px)] overflow-hidden rounded-b-[1.5rem] sm:min-h-[92vh] sm:rounded-b-[2rem] md:rounded-b-[2.5rem]"
     >
       <img
         src="/hero-bg.png"
         alt="Assorted polished gemstones and crystal clusters on warm stone"
-        className="absolute inset-0 h-full w-full object-cover object-[center_30%] sm:object-[65%_center]"
+        className="hero-section__media"
+        fetchPriority="high"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-cream/55 via-cream/20 to-cream/5 sm:bg-gradient-to-r sm:from-cream/50 sm:via-cream/15 sm:to-transparent" />
+      <div className="hero-section__overlay" aria-hidden="true" />
 
       <div className="section-x relative z-10 mx-auto flex min-h-[min(92vh,900px)] max-w-7xl flex-col justify-center pb-24 pt-24 sm:min-h-[92vh] sm:pb-28 sm:pt-28 md:pb-32 lg:pb-36">
         <div className="grid items-end gap-8 sm:gap-12 lg:grid-cols-[1fr_auto]">
