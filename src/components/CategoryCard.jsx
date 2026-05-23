@@ -5,7 +5,7 @@ export default function CategoryCard({ name, path, image, imageAlt }) {
   return (
     <Link
       to={path}
-      className="scroll-reveal-item group flex w-full flex-col items-center rounded-[1.75rem] border border-beige/80 bg-champagne/60 px-4 py-6 transition hover:border-tan hover:bg-white/60 min-[420px]:rounded-[2.5rem] min-[420px]:px-5 min-[420px]:py-7 sm:px-6 sm:py-8"
+      className="group flex w-full flex-col items-center rounded-[1.75rem] border border-beige/80 bg-champagne/60 px-4 py-6 transition hover:border-tan hover:bg-white/60 min-[420px]:rounded-[2.5rem] min-[420px]:px-5 min-[420px]:py-7 sm:px-6 sm:py-8"
     >
       <img
         src={image}
