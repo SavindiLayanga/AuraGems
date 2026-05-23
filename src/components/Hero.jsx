@@ -1,5 +1,7 @@
 import { ArrowRight } from 'lucide-react';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 import Button from './Button';
+import ScrollRevealItem from './ScrollRevealItem';
 import TypewriterHeading from './TypewriterHeading';
 
 const avatars = [
@@ -10,10 +12,13 @@ const avatars = [
 ];
 
 export default function Hero() {
+  const revealRef = useScrollReveal({ threshold: 0.12 });
+
   return (
     <section
+      ref={revealRef}
       id="home"
-      className="hero-section hero-enter relative min-h-[min(92vh,900px)] overflow-hidden rounded-b-[1.5rem] sm:min-h-[92vh] sm:rounded-b-[2rem] md:rounded-b-[2.5rem]"
+      className="hero-section relative min-h-[min(92vh,900px)] overflow-hidden rounded-b-[1.5rem] sm:min-h-[92vh] sm:rounded-b-[2rem] md:rounded-b-[2.5rem]"
     >
       <img
         src="/hero-bg.png"
@@ -26,9 +31,14 @@ export default function Hero() {
       <div className="section-x relative z-10 mx-auto flex min-h-[min(92vh,900px)] max-w-7xl flex-col justify-center pb-24 pt-24 sm:min-h-[92vh] sm:pb-28 sm:pt-28 md:pb-32 lg:pb-36">
         <div className="grid items-end gap-8 sm:gap-12 lg:grid-cols-[1fr_auto]">
           <div className="max-w-xl">
-            <TypewriterHeading />
+            <ScrollRevealItem index={0} className="scroll-reveal-item--text">
+              <TypewriterHeading />
+            </ScrollRevealItem>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <ScrollRevealItem
+              index={1}
+              className="mt-8 flex flex-wrap items-center gap-4"
+            >
               <Button variant="solid" className="!px-8">
                 Let&apos;s Get Started
               </Button>
@@ -39,17 +49,22 @@ export default function Hero() {
               >
                 <ArrowRight className="h-5 w-5" />
               </button>
-            </div>
+            </ScrollRevealItem>
 
-            <p className="mt-8 max-w-sm text-sm font-light leading-relaxed text-warm-gray">
-              Discover hand-selected sapphires, emeralds, and diamonds crafted
-              into timeless pieces — where natural brilliance meets refined
-              artistry.
-            </p>
+            <ScrollRevealItem index={2} className="scroll-reveal-item--text">
+              <p className="mt-8 max-w-sm text-sm font-light leading-relaxed text-warm-gray">
+                Discover hand-selected sapphires, emeralds, and diamonds crafted
+                into timeless pieces — where natural brilliance meets refined
+                artistry.
+              </p>
+            </ScrollRevealItem>
           </div>
 
           <div className="flex w-full flex-col items-stretch gap-5 sm:items-end sm:gap-6 lg:gap-8">
-            <div className="flex w-full max-w-xs items-center gap-4 self-center rounded-2xl bg-white/70 px-4 py-3 shadow-md backdrop-blur-md sm:max-w-none sm:self-end">
+            <ScrollRevealItem
+              index={3}
+              className="scroll-reveal-item--card flex w-full max-w-xs items-center gap-4 self-center rounded-2xl bg-white/70 px-4 py-3 shadow-md backdrop-blur-md sm:max-w-none sm:self-end"
+            >
               <div className="flex -space-x-2">
                 {avatars.map((src, i) => (
                   <img
@@ -67,9 +82,13 @@ export default function Hero() {
                 </p>
                 <p className="text-xs font-light text-warm-gray">Happy Clients</p>
               </div>
-            </div>
+            </ScrollRevealItem>
 
-            <article className="w-full max-w-md rounded-3xl bg-white p-4 shadow-xl sm:max-w-xs md:max-w-sm sm:self-end">
+            <ScrollRevealItem
+              index={4}
+              as="article"
+              className="scroll-reveal-item--card w-full max-w-md rounded-3xl bg-white p-4 shadow-xl sm:max-w-xs md:max-w-sm sm:self-end"
+            >
               <img
                 src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80"
                 alt="Sapphire and gold bracelet"
@@ -85,7 +104,7 @@ export default function Hero() {
                 Read More
                 <ArrowRight className="h-3.5 w-3.5" />
               </a>
-            </article>
+            </ScrollRevealItem>
           </div>
         </div>
       </div>
