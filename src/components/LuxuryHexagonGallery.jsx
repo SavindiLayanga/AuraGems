@@ -35,6 +35,7 @@ function Hexagon({ empty = false, assembleIndex = 0 }) {
 
 export default function LuxuryHexagonGallery() {
   const galleryRef = useRef(null);
+  const mosaicTimeoutRef = useRef(null);
   const [ready, setReady] = useState(false);
   const [assembled, setAssembled] = useState(false);
 
@@ -120,26 +121,42 @@ export default function LuxuryHexagonGallery() {
       return;
     }
 
-    const reveal = () => {
+    const playAssembly = () => {
+      if (mosaicTimeoutRef.current) {
+        window.clearTimeout(mosaicTimeoutRef.current);
+      }
+      setAssembled(false);
       setHexOrigins();
       requestAnimationFrame(() => {
-        setAssembled(true);
-        window.setTimeout(() => syncMosaic(), 900);
+        requestAnimationFrame(() => {
+          setAssembled(true);
+          mosaicTimeoutRef.current = window.setTimeout(() => syncMosaic(), 900);
+        });
       });
     };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          reveal();
-          observer.disconnect();
+          playAssembly();
+        } else {
+          setAssembled(false);
+          if (mosaicTimeoutRef.current) {
+            window.clearTimeout(mosaicTimeoutRef.current);
+            mosaicTimeoutRef.current = null;
+          }
         }
       },
       { threshold: 0.18, rootMargin: '0px 0px -6% 0px' },
     );
 
     observer.observe(gallery);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (mosaicTimeoutRef.current) {
+        window.clearTimeout(mosaicTimeoutRef.current);
+      }
+    };
   }, [setHexOrigins, syncMosaic]);
 
   let filledIndex = 0;
