@@ -1,6 +1,14 @@
 import { useEffect, useRef } from 'react';
 
-export function useScrollReveal({ instant = false, threshold = 0.1 } = {}) {
+/**
+ * Toggles `is-visible` when the section enters/leaves the viewport
+ * so scroll animations replay on scroll down and scroll up.
+ */
+export function useScrollReveal({
+  instant = false,
+  threshold = 0.1,
+  once = false,
+} = {}) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -22,7 +30,9 @@ export function useScrollReveal({ instant = false, threshold = 0.1 } = {}) {
       ([entry]) => {
         if (entry.isIntersecting) {
           el.classList.add('is-visible');
-          observer.disconnect();
+          if (once) observer.disconnect();
+        } else if (!once) {
+          el.classList.remove('is-visible');
         }
       },
       { threshold, rootMargin: '0px 0px -6% 0px' },
@@ -30,7 +40,7 @@ export function useScrollReveal({ instant = false, threshold = 0.1 } = {}) {
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [instant, threshold]);
+  }, [instant, threshold, once]);
 
   return ref;
 }

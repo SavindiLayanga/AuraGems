@@ -44,40 +44,32 @@
       opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
       transform 1s cubic-bezier(0.16, 1, 0.3, 1),
       filter 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0s);
   }
 
   .scroll-reveal.is-visible .scroll-reveal-item {
     opacity: 1;
     filter: blur(0);
     transform: perspective(1100px) translate3d(0, 0, 0) scale(1);
+    transition-delay: var(--reveal-delay, 0s);
   }
 
-  .scroll-reveal.is-visible .scroll-reveal-item:nth-child(1 of .scroll-reveal-item) {
-    transition-delay: 0.05s;
+  /* Text lines — slightly softer motion */
+  .scroll-reveal-item.scroll-reveal-item--text {
+    transform: perspective(1100px) translate3d(0, 1.25rem, -5rem) scale(0.92);
   }
-  .scroll-reveal.is-visible .scroll-reveal-item:nth-child(2 of .scroll-reveal-item) {
-    transition-delay: 0.12s;
+
+  .scroll-reveal.is-visible .scroll-reveal-item--text {
+    transform: perspective(1100px) translate3d(0, 0, 0) scale(1);
   }
-  .scroll-reveal.is-visible .scroll-reveal-item:nth-child(3 of .scroll-reveal-item) {
-    transition-delay: 0.19s;
+
+  /* Cards — deeper zoom for emphasis */
+  .scroll-reveal-item.scroll-reveal-item--card {
+    transform: perspective(1100px) translate3d(0, 2rem, -9rem) scale(0.84);
   }
-  .scroll-reveal.is-visible .scroll-reveal-item:nth-child(4 of .scroll-reveal-item) {
-    transition-delay: 0.26s;
-  }
-  .scroll-reveal.is-visible .scroll-reveal-item:nth-child(5 of .scroll-reveal-item) {
-    transition-delay: 0.33s;
-  }
-  .scroll-reveal.is-visible .scroll-reveal-item:nth-child(6 of .scroll-reveal-item) {
-    transition-delay: 0.4s;
-  }
-  .scroll-reveal.is-visible .scroll-reveal-item:nth-child(7 of .scroll-reveal-item) {
-    transition-delay: 0.47s;
-  }
-  .scroll-reveal.is-visible .scroll-reveal-item:nth-child(8 of .scroll-reveal-item) {
-    transition-delay: 0.54s;
-  }
-  .scroll-reveal.is-visible .scroll-reveal-item:nth-child(n + 9 of .scroll-reveal-item) {
-    transition-delay: 0.6s;
+
+  .scroll-reveal.is-visible .scroll-reveal-item--card {
+    transform: perspective(1100px) translate3d(0, 0, 0) scale(1);
   }
 
   /* Whole section (no inner items) */
@@ -97,28 +89,14 @@
     transform: perspective(1200px) translate3d(0, 0, 0) scale(1);
   }
 
-  .hero-enter {
-    animation: hero-enter 1.15s cubic-bezier(0.16, 1, 0.3, 1) both;
-    transform-style: preserve-3d;
-  }
-
-  @keyframes hero-enter {
-    from {
-      opacity: 0;
-      filter: blur(10px);
-      transform: perspective(1400px) translate3d(0, 2.5rem, -10rem) scale(0.8);
-    }
-    to {
-      opacity: 1;
-      filter: blur(0);
-      transform: perspective(1400px) translate3d(0, 0, 0) scale(1);
-    }
+  /* Hero: section stays visible; inner items animate */
+  .scroll-reveal.hero-section:has(.scroll-reveal-item) {
+    opacity: 1;
+    filter: none;
+    transform: none;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-enter {
-      animation: none;
-    }
     .scroll-reveal:not(:has(.scroll-reveal-item)),
     .scroll-reveal-item {
       opacity: 1;
