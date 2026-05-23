@@ -2,6 +2,7 @@ import { Clock, Mail, MapPin, Phone, Send } from 'lucide-react';
 import { useState } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import Button from './Button';
+import ScrollRevealItem from './ScrollRevealItem';
 
 const contactDetails = [
   {
@@ -56,21 +57,30 @@ export default function ContactSection() {
       className="section-x bg-cream py-14 sm:py-16 md:py-20 lg:py-24"
     >
       <div className="mx-auto max-w-7xl">
-        <div className="scroll-reveal-item mx-auto max-w-lg text-center">
-          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.28em] text-warm-gray">
-            Contact Us
-          </p>
-          <h2 className="mt-3 font-serif text-3xl font-medium text-mocha md:text-4xl">
-            We&apos;d Love to Hear From You
-          </h2>
-          <p className="mt-4 text-sm font-light leading-relaxed text-warm-gray">
-            Questions about a stone, a bespoke setting, or your order? Our gem
-            specialists respond within one business day.
-          </p>
+        <div className="mx-auto max-w-lg text-center">
+          <ScrollRevealItem index={0} className="scroll-reveal-item--text">
+            <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.28em] text-warm-gray">
+              Contact Us
+            </p>
+          </ScrollRevealItem>
+          <ScrollRevealItem index={1} className="scroll-reveal-item--text">
+            <h2 className="mt-3 font-serif text-3xl font-medium text-mocha md:text-4xl">
+              We&apos;d Love to Hear From You
+            </h2>
+          </ScrollRevealItem>
+          <ScrollRevealItem index={2} className="scroll-reveal-item--text">
+            <p className="mt-4 text-sm font-light leading-relaxed text-warm-gray">
+              Questions about a stone, a bespoke setting, or your order? Our gem
+              specialists respond within one business day.
+            </p>
+          </ScrollRevealItem>
         </div>
 
         <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_minmax(0,20rem)] lg:gap-10 xl:grid-cols-[1.15fr_minmax(0,22rem)]">
-          <div className="scroll-reveal-item card-shadow rounded-2xl border border-beige/70 bg-white/90 p-6 md:p-8 lg:p-10">
+          <ScrollRevealItem
+            index={3}
+            className="scroll-reveal-item--card card-shadow rounded-2xl border border-beige/70 bg-white/90 p-6 md:p-8 lg:p-10"
+          >
             {submitted ? (
               <div
                 className="flex min-h-[20rem] flex-col items-center justify-center text-center"
@@ -193,14 +203,16 @@ export default function ContactSection() {
                 </Button>
               </form>
             )}
-          </div>
+          </ScrollRevealItem>
 
-          <aside className="scroll-reveal-item flex flex-col gap-4">
+          <aside className="flex flex-col gap-4">
             <ul className="space-y-4">
-              {contactDetails.map(({ icon: Icon, label, value, href }) => (
-                <li
+              {contactDetails.map(({ icon: Icon, label, value, href }, i) => (
+                <ScrollRevealItem
                   key={label}
-                  className="card-shadow rounded-2xl border border-beige/70 bg-white/80 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-tan/80 hover:card-shadow-hover"
+                  as="li"
+                  index={4 + i}
+                  className="scroll-reveal-item--card card-shadow rounded-2xl border border-beige/70 bg-white/80 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-tan/80 hover:card-shadow-hover"
                 >
                   {href ? (
                     <a
@@ -245,14 +257,19 @@ export default function ContactSection() {
                       </span>
                     </div>
                   )}
-                </li>
+                </ScrollRevealItem>
               ))}
             </ul>
 
-            <p className="rounded-2xl border border-beige/60 bg-champagne/50 px-5 py-4 text-xs font-light leading-relaxed text-warm-gray">
-              Prefer a private consultation? Mention your preferred date and
-              time — we&apos;ll arrange a virtual or in-showroom appointment.
-            </p>
+            <ScrollRevealItem
+              index={8}
+              className="scroll-reveal-item--text rounded-2xl border border-beige/60 bg-champagne/50 px-5 py-4 text-xs font-light leading-relaxed text-warm-gray"
+            >
+              <p>
+                Prefer a private consultation? Mention your preferred date and
+                time — we&apos;ll arrange a virtual or in-showroom appointment.
+              </p>
+            </ScrollRevealItem>
           </aside>
         </div>
       </div>
