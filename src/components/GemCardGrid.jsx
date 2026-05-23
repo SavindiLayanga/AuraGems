@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import GemDetailPopover from './GemDetailPopover';
 import GemEducationCard from './GemEducationCard';
+import ScrollRevealItem from './ScrollRevealItem';
 
 function getPopoverSide(event) {
   const target = event?.currentTarget;
@@ -20,7 +21,11 @@ function getPopoverSide(event) {
   return 'center';
 }
 
-export default function GemCardGrid({ items, staggerReveal = false }) {
+export default function GemCardGrid({
+  items,
+  staggerReveal = false,
+  revealIndexStart = 0,
+}) {
   const [activeGem, setActiveGem] = useState(null);
   const [popoverSide, setPopoverSide] = useState('left');
 
@@ -56,18 +61,29 @@ export default function GemCardGrid({ items, staggerReveal = false }) {
       )}
 
       <div className="relative z-10 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8">
-        {items.map((gem) => (
-          <div
-            key={gem.name}
-            className={staggerReveal ? 'scroll-reveal-item' : undefined}
-          >
-            <GemEducationCard
-              gem={gem}
-              isActive={activeGem?.name === gem.name}
-              onOpen={(event) => openGem(gem, event)}
-            />
-          </div>
-        ))}
+        {items.map((gem, i) =>
+          staggerReveal ? (
+            <ScrollRevealItem
+              key={gem.name}
+              index={revealIndexStart + i}
+              className="scroll-reveal-item--card"
+            >
+              <GemEducationCard
+                gem={gem}
+                isActive={activeGem?.name === gem.name}
+                onOpen={(event) => openGem(gem, event)}
+              />
+            </ScrollRevealItem>
+          ) : (
+            <div key={gem.name}>
+              <GemEducationCard
+                gem={gem}
+                isActive={activeGem?.name === gem.name}
+                onOpen={(event) => openGem(gem, event)}
+              />
+            </div>
+          ),
+        )}
       </div>
     </div>
   );
