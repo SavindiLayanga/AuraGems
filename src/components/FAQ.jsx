@@ -1,6 +1,7 @@
 import { ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import ScrollRevealItem from './ScrollRevealItem';
 
 const faqs = [
   {
@@ -75,17 +76,23 @@ export default function FAQ() {
       className="section-x bg-cream py-14 sm:py-16 md:py-20 lg:py-24"
     >
       <div className="mx-auto max-w-7xl">
-        <div className="scroll-reveal-item mx-auto max-w-lg text-center">
-          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.28em] text-warm-gray">
-            FAQ
-          </p>
-          <h2 className="mt-3 font-serif text-3xl font-medium text-mocha md:text-4xl">
-            Questions & Answers
-          </h2>
-          <p className="mt-4 text-sm font-light leading-relaxed text-warm-gray">
-            Everything you need to know about certification, shipping, care, and
-            our commitment to ethical gemstones.
-          </p>
+        <div className="mx-auto max-w-lg text-center">
+          <ScrollRevealItem index={0} className="scroll-reveal-item--text">
+            <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.28em] text-warm-gray">
+              FAQ
+            </p>
+          </ScrollRevealItem>
+          <ScrollRevealItem index={1} className="scroll-reveal-item--text">
+            <h2 className="mt-3 font-serif text-3xl font-medium text-mocha md:text-4xl">
+              Questions & Answers
+            </h2>
+          </ScrollRevealItem>
+          <ScrollRevealItem index={2} className="scroll-reveal-item--text">
+            <p className="mt-4 text-sm font-light leading-relaxed text-warm-gray">
+              Everything you need to know about certification, shipping, care, and
+              our commitment to ethical gemstones.
+            </p>
+          </ScrollRevealItem>
         </div>
 
         <ul className="faq-list mt-10 flex flex-col gap-3 md:mt-12 lg:gap-4">
@@ -105,9 +112,10 @@ export default function FAQ() {
                     const isOpen = openIndex === index;
 
                     return (
-                      <div
+                      <ScrollRevealItem
                         key={question}
-                        className={`faq-item scroll-reveal-item group card-shadow overflow-hidden rounded-2xl border transition-all duration-300 ${
+                        index={3 + index}
+                        className={`scroll-reveal-item--card faq-item group card-shadow overflow-hidden rounded-2xl border transition-all duration-300 ${
                           isOpen
                             ? 'faq-item--open'
                             : 'faq-item--closed hover:-translate-y-0.5 hover:card-shadow-hover'
@@ -136,7 +144,7 @@ export default function FAQ() {
                             aria-hidden
                           />
                         </button>
-                      </div>
+                      </ScrollRevealItem>
                     );
                   })}
                 </div>
@@ -146,7 +154,7 @@ export default function FAQ() {
                     id={panelId}
                     role="region"
                     aria-labelledby={buttonId}
-                    className="faq-answer scroll-reveal-item mt-3"
+                    className="faq-answer mt-3"
                   >
                     <div className="card-shadow rounded-2xl border border-tan/80 bg-white px-5 py-5 md:px-6 md:py-6">
                       <p className="text-sm font-light leading-relaxed text-warm-gray">
