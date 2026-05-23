@@ -8,7 +8,9 @@ import {
   Phone,
   Share2,
 } from 'lucide-react';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 import Button from './Button';
+import ScrollRevealItem from './ScrollRevealItem';
 
 const shopLinks = [
   { label: 'All Collections', href: '#collection' },
@@ -72,8 +74,10 @@ function FooterLinkGroup({ title, links }) {
 }
 
 export default function Footer() {
+  const revealRef = useScrollReveal({ threshold: 0.08 });
+
   return (
-    <footer className="bg-mocha text-cream">
+    <footer ref={revealRef} className="bg-mocha text-cream">
       {/* Partner marquee — scrolls left continuously */}
       <div
         className="footer-partners section-x border-b border-white/10 bg-beige py-8 md:py-10"
@@ -99,7 +103,7 @@ export default function Footer() {
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
             {/* Brand */}
-            <div className="lg:col-span-4">
+            <ScrollRevealItem index={0} className="scroll-reveal-item--text lg:col-span-4">
               <a
                 href="#home"
                 className="inline-flex items-center gap-2 font-serif text-2xl font-semibold tracking-wide text-cream"
@@ -150,17 +154,18 @@ export default function Footer() {
                   </a>
                 ))}
               </div>
-            </div>
+            </ScrollRevealItem>
 
-            {/* Link columns */}
-            <div className="grid gap-10 sm:grid-cols-3 lg:col-span-5">
+            <ScrollRevealItem
+              index={1}
+              className="scroll-reveal-item--text grid gap-10 sm:grid-cols-3 lg:col-span-5"
+            >
               <FooterLinkGroup title="Shop" links={shopLinks} />
               <FooterLinkGroup title="Company" links={companyLinks} />
               <FooterLinkGroup title="Support" links={supportLinks} />
-            </div>
+            </ScrollRevealItem>
 
-            {/* Newsletter */}
-            <div className="lg:col-span-3">
+            <ScrollRevealItem index={2} className="scroll-reveal-item--card lg:col-span-3">
               <h3 className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-cream">
                 Stay In Touch
               </h3>
@@ -204,11 +209,13 @@ export default function Footer() {
                   ),
                 )}
               </div>
-            </div>
+            </ScrollRevealItem>
           </div>
 
-          {/* Bottom bar */}
-          <div className="mt-16 flex flex-col items-center justify-between gap-6 border-t border-cream/10 pt-8 md:flex-row">
+          <ScrollRevealItem
+            index={3}
+            className="scroll-reveal-item--text mt-16 flex flex-col items-center justify-between gap-6 border-t border-cream/10 pt-8 md:flex-row"
+          >
             <p className="text-center text-xs font-light text-cream/50 md:text-left">
               © {new Date().getFullYear()} AuraGems. All rights reserved.
               Ethically sourced gemstones, crafted with care.
@@ -243,7 +250,7 @@ export default function Footer() {
                 AMEX
               </span>
             </div>
-          </div>
+          </ScrollRevealItem>
         </div>
       </div>
     </footer>
